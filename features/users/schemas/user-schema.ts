@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const userSchema = z.object({
-  id: z.string().optional(), // get from supabase auth when signing up
   full_name: z
     .string({ required_error: "Full name is required." })
     .min(3, "Full name must be at least 3 characters."),
