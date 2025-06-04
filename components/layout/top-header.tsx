@@ -3,7 +3,7 @@
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import BraintrustLogo from "./braintrust-logo";
+import Logo from "@/app/icons/logo";
 import { TitleHeader } from "./title-header";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/auth-provider";
@@ -19,7 +19,7 @@ export function TopHeader() {
   return (
     <header className="flex items-center justify-between bg-white border-b border-gray-200">
       <div className="flex items-center justify-center h-16 w-60 border-r border-gray-200">
-        <BraintrustLogo />
+        <Logo />
       </div>
       <div className="px-6 h-16 mr-auto flex justify-end items-center">
         <TitleHeader title={title} />
