@@ -7,6 +7,10 @@ export type UserInsert = Database["public"]["Tables"]["user"]["Insert"];
 
 export type UserUpdate = Database["public"]["Tables"]["user"]["Update"];
 
+export type UserWithPassword = UserUpdate & {
+  password?: string;
+};
+
 export type UserSEWithAssignedClients = User & {
   assigned_clients?: Client[] | null;
 };
