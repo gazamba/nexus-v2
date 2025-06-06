@@ -3,30 +3,39 @@
 import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { User, UserSEWithAssignedClients } from "../types/user-types";
+import {
+  User,
+  UserSEWithAssignedClients,
+  UserUpdate,
+} from "../types/user-types";
+import { UserDialog } from "./user-dialog";
 
 interface UserTableRowProps {
   user: User | UserSEWithAssignedClients;
 }
 
 export default function UserTableActions({ user }: UserTableRowProps) {
-  const handleEdit = (user: User | UserSEWithAssignedClients) => {
-    console.log("edit", user);
+  const handleEditSubmit = async (data: UserUpdate) => {
+    // TODO: Implement actual user update logic here
+    console.log("Updating user:", user.id, data);
   };
 
   const handleDelete = (user: User | UserSEWithAssignedClients) => {
     console.log("delete", user);
   };
+
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => handleEdit(user)}
-        className="w-8 h-8"
-      >
-        <Edit className="w-4 h-4" />
-      </Button>
+      <UserDialog
+        mode="edit"
+        user={user}
+        trigger={
+          <Button variant="ghost" size="icon" className="w-8 h-8">
+            <Edit className="w-4 h-4" />
+          </Button>
+        }
+        onSubmit={handleEditSubmit}
+      />
       <Button
         variant="ghost"
         size="icon"

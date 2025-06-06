@@ -22,7 +22,15 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import type { User, UserInsert, UserUpdate } from "../types/user-types";
+import type {
+  User,
+  UserInsert,
+  UserUpdate,
+  UserWithPassword,
+} from "../types/user-types";
+import { createUserAction } from "../actions/user-actions";
+import { userSchema, userUpdateSchema } from "../schemas/user-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface UserFormProps {
   user?: User;
@@ -39,9 +47,22 @@ export function UserForm({
   error,
   onCancel,
 }: UserFormProps) {
-  const form = useForm<UserInsert | UserUpdate>({
-    defaultValues: user || {},
+  const form = useForm<UserWithPassword>({
+    resolver: zodResolver(user ? userUpdateSchema : userSchema),
+    defaultValues: user ?? {
+      full_name: "",
+      email: "",
+      password: "",
+      role: undefined,
+      admin: false,
+      billing: false,
+      bill_rate: null,
+      cost_rate: null,
+      avatar_initial: "",
+      notes: "",
+    },
   });
+
   const { control, handleSubmit, reset } = form;
 
   useEffect(() => {
@@ -51,7 +72,7 @@ export function UserForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6"
         autoComplete="off"
       >

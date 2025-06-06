@@ -2,7 +2,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { TabNavigation } from "@/components/ui/tab-navigation";
 import { TitleContent } from "@/components/ui/title-content";
 import { UsersTable } from "./users-table";
-import { AddUserDialog } from "./add-user-dialog";
+import { AddUser } from "./add-user";
 
 import type {
   User,
@@ -24,7 +24,7 @@ export default function UserManagement({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <TitleContent title="Manage Users" />
-        <AddUserDialog />
+        <AddUser />
       </div>
       <Card>
         <CardHeader>
