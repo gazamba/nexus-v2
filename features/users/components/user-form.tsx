@@ -22,31 +22,18 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import type {
-  User,
-  UserInsert,
-  UserUpdate,
-  UserWithPassword,
-} from "../types/user-types";
-import { createUserAction } from "../actions/user-actions";
+import type { User, UserWithPassword } from "../types/user-types";
 import { userSchema, userUpdateSchema } from "../schemas/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 interface UserFormProps {
   user?: User;
-  onSubmit: (data: UserInsert | UserUpdate) => Promise<void>;
   loading?: boolean;
+  onSubmit?: (data: UserWithPassword) => void;
   error?: string | null;
-  onCancel?: () => void;
 }
 
-export function UserForm({
-  user,
-  onSubmit,
-  loading,
-  error,
-  onCancel,
-}: UserFormProps) {
+export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
   const form = useForm<UserWithPassword>({
     resolver: zodResolver(user ? userUpdateSchema : userSchema),
     defaultValues: user ?? {
@@ -69,12 +56,19 @@ export function UserForm({
     reset(user || {});
   }, [user, reset]);
 
+  const handleFormSubmit = (data: UserWithPassword) => {
+    console.log(data);
+    onSubmit?.(data);
+    // TODO: Implement actual user update logic here
+  };
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleFormSubmit)}
         className="space-y-6"
         autoComplete="off"
+        id="user-form"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
@@ -266,7 +260,7 @@ export function UserForm({
           />
         </div>
         {error && <div className="text-red-600 font-medium">{error}</div>}
-        <div className="flex gap-2 justify-end mt-4">
+        {/* <div className="flex gap-2 justify-end mt-4">
           <Button
             type="button"
             variant="secondary"
@@ -278,7 +272,7 @@ export function UserForm({
           <Button type="submit" disabled={loading} className="">
             {loading ? "Saving..." : user ? "Update User" : "Create User"}
           </Button>
-        </div>
+        </div> */}
       </form>
     </Form>
   );
