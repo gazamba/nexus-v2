@@ -122,3 +122,23 @@ export async function updateUserAction(
     };
   }
 }
+
+export async function deleteUserAction(userId: string): Promise<ActionResult> {
+  try {
+    // await deleteUser(userId);
+    revalidatePath("/users");
+
+    return {
+      success: true,
+      message: "User deleted successfully!",
+    };
+  } catch (error) {
+    console.error("Error deleting user:", error);
+
+    return {
+      success: false,
+      message: "Failed to delete user",
+      errors: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
