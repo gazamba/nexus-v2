@@ -8,7 +8,8 @@ import {
   UserSEWithAssignedClients,
   UserUpdate,
 } from "../types/user-types";
-import { UserDialog } from "./user-dialog";
+import Modal from "@/components/ui/modal";
+import { UserForm } from "./user-form";
 
 interface UserTableRowProps {
   user: User | UserSEWithAssignedClients;
@@ -16,34 +17,45 @@ interface UserTableRowProps {
 
 export default function UserTableActions({ user }: UserTableRowProps) {
   const handleEditSubmit = async (data: UserUpdate) => {
-    // TODO: Implement actual user update logic here
     console.log("Updating user:", user.id, data);
+    // TODO: Implement actual user update logic here
   };
 
-  const handleDelete = (user: User | UserSEWithAssignedClients) => {
-    console.log("delete", user);
+  const handleDelete = (userId: string) => {
+    console.log("deleting", userId);
+    // TODO: Implement actual user delete logic here
   };
 
   return (
     <>
-      <UserDialog
-        mode="edit"
-        user={user}
+      <Modal
+        title="Edit User"
+        onSubmit={() => handleEditSubmit(user)}
+        buttonTextAction="Update User"
         trigger={
-          <Button variant="ghost" size="icon" className="w-8 h-8">
+          <Button variant="ghost" size="icon">
             <Edit className="w-4 h-4" />
           </Button>
         }
-        onSubmit={handleEditSubmit}
-      />
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => handleDelete(user)}
-        className="w-8 h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
       >
-        <Trash2 className="w-4 h-4" />
-      </Button>
+        <UserForm user={user} />
+      </Modal>
+      <Modal
+        title="Confirm Delete"
+        trigger={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-8 h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        }
+        onSubmit={() => handleDelete(user.id)}
+        buttonTextAction="Delete"
+      >
+        <p>Are you sure you want to delete this user?</p>
+      </Modal>
     </>
   );
 }

@@ -2,12 +2,12 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { TabNavigation } from "@/components/ui/tab-navigation";
 import { TitleContent } from "@/components/ui/title-content";
 import { UsersTable } from "./users-table";
-import { AddUser } from "./add-user";
 
 import type {
   User,
   UserSEWithAssignedClients,
 } from "@/features/users/types/user-types";
+import AddNewUser from "./add-new-user";
 
 interface UserManagementProps {
   initialUsers: User[];
@@ -24,7 +24,7 @@ export default function UserManagement({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <TitleContent title="Manage Users" />
-        <AddUser />
+        <AddNewUser />
       </div>
       <Card>
         <CardHeader>
