@@ -15,12 +15,12 @@ export default async function UsersPage({
   const adminUsers = await getUsersByRole("admin");
 
   return (
-    <div>
+    <>
       <UserManagement
         initialUsers={adminUsers}
         initialSeUsers={seUsers}
         activeTab={activeTab}
       />
-    </div>
+    </>
   );
 }
