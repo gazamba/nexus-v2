@@ -8,9 +8,9 @@ import {
   BarChart3,
   AlertTriangle,
 } from "lucide-react";
-import { LabelItem } from "./types/layout-types";
+import { LabelItemType } from "./types/layout-types";
 
-export const labelItems: LabelItem[] = [
+export const labelItems: LabelItemType[] = [
   {
     id: "dashboard",
     label: "Dashboard",
