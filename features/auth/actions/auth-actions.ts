@@ -3,9 +3,11 @@
 import { userSchema } from "@/features/users/schemas/user-schema";
 import { createCompleteUser } from "@/features/users/services/user-service";
 import { createClient } from "@/utils/supabase/server";
-import { ActionResult } from "@/types/types";
+import { ActionResultType } from "@/types/types";
 
-export async function loginAction(formData: FormData): Promise<ActionResult> {
+export async function loginAction(
+  formData: FormData
+): Promise<ActionResultType> {
   try {
     const supabase = await createClient();
 
@@ -40,7 +42,7 @@ export async function loginAction(formData: FormData): Promise<ActionResult> {
 
 export async function signUpAndCreateUserAction(
   formData: FormData
-): Promise<ActionResult> {
+): Promise<ActionResultType> {
   try {
     const rawFormData = {
       email: formData.get("email") as string,
@@ -87,7 +89,7 @@ export async function signUpAndCreateUserAction(
   }
 }
 
-export async function signOutAction(): Promise<ActionResult> {
+export async function signOutAction(): Promise<ActionResultType> {
   try {
     const supabase = await createClient();
     const { error } = await supabase.auth.signOut();
