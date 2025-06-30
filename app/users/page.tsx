@@ -1,4 +1,4 @@
-import UserManagement from "@/features/users/components/user-management";
+import UserManagement from "@/features/users/components/users-management";
 import {
   getUsersByRole,
   getUsersSEWithAssignedClients,

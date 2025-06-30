@@ -1,22 +1,11 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import Modal from "@/components/ui/modal";
+import ClientsManagement from "@/features/clients/components/clients-management";
+import { getClients } from "@/features/clients/services/client-service";
 
-export default function ClientsPage() {
-  const handleConfirmation = (confirm: boolean) => {
-    console.log(confirm);
-  };
-
+export default async function ClientsPage() {
+  const clients = await getClients();
   return (
-    <div>
-      <Modal
-        title="Confirm Delete"
-        trigger={<Button>Delete Client</Button>}
-        buttonTextAction="Delete"
-        onSubmit={() => handleConfirmation(true)}
-      >
-        <p>Are you sure you want to delete this client?</p>
-      </Modal>
-    </div>
+    <>
+      <ClientsManagement clients={clients} />
+    </>
   );
 }

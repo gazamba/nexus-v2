@@ -1,21 +1,37 @@
-import { Suspense } from "react";
-// import DashboardOverview from "@/features/dashboard-admin/components/dashboard-overview";
-// import { getDashboardData } from "@/features/dashboard-admin/services/dashboard-service";
-// import type { TimePeriod } from "@/features/dashboard-admin/types/dashboard-types";
+import DashboardAdminManagement from "@/features/dashboard-admin/components/dashboard-admin-management";
 
-interface HomeProps {
-  period?: string;
-}
+// Sample data
+const sampleMetrics = {
+  totalWorkflows: { value: 2847, change: 12 },
+  totalExceptions: { value: 156, change: -8 },
+  timeSaved: { value: "1,284h", change: 24 },
+  revenue: { value: "$847K", change: 16 },
+  activeClients: { value: 128, change: 5 },
+};
 
-export default async function Home({ period }: HomeProps) {
-  const timePeriod = period || "itd";
-  // const dashboardData = await getDashboardData(timePeriod);
+const clientsWithMetrics = [
+  {
+    id: "1",
+    name: "Acme Corp",
+    contractId: "1234567890",
+    contractStart: "Jan 15, 2025",
+    workflows: 24,
+    nodes: 156,
+    executions: 1847,
+    exceptions: 12,
+    revenue: "$24,500",
+    timeSaved: "284h",
+    moneySaved: "$42,600",
+  },
+];
 
+export default async function DashboardPage() {
   return (
     <>
-      {/* <Suspense fallback={<div>Loading dashboard...</div>}> */}
-      {/* <DashboardOverview data={dashboardData} activeTimePeriod={timePeriod} /> */}
-      {/* </Suspense> */}
+      <DashboardAdminManagement
+        sampleMetrics={sampleMetrics}
+        clientsWithMetrics={clientsWithMetrics}
+      />
     </>
   );
 }
