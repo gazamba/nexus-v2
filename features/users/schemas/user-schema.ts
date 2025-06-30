@@ -1,35 +1,27 @@
 import { z } from "zod";
 
 export const userSchema = z.object({
-  full_name: z
-    .string({ required_error: "Full name is required." })
-    .min(3, "Full name must be at least 3 characters.")
-    .nullable(),
-  password: z.string({ required_error: "Password is required." }),
+  full_name: z.string({ required_error: "Full name is required." }).min(5),
+  password: z.string().min(8, "Password must be at least 8 characters."),
   email: z
     .string({ required_error: "Email is required." })
-    .email("Invalid email address.")
-    .nullable(),
-  phone: z.string().nullable().optional(),
-  role: z.string().nullable(),
-  admin: z.boolean().nullable().default(false),
-  billing: z.boolean().nullable().default(false),
+    .email("Invalid email address."),
+  phone: z.string(),
+  role: z.string().min(1, "Role is required."),
+  admin: z.boolean(),
+  billing: z.boolean(),
   bill_rate: z.coerce
     .number({ invalid_type_error: "Bill rate must be a number." })
     .positive("Bill rate must be a positive number if provided.")
-    .nullable()
-    .optional(),
+    .nullable(),
   cost_rate: z.coerce
     .number({ invalid_type_error: "Cost rate must be a number." })
     .positive("Cost rate must be a positive number if provided.")
-    .nullable()
-    .optional(),
+    .nullable(),
   avatar_initial: z
     .string()
-    .max(2, "Avatar initial can be at most 2 characters.")
-    .nullable()
-    .optional(),
-  notes: z.string().nullable().optional(),
+    .max(2, "Avatar initial can be at most 2 characters."),
+  notes: z.string(),
 });
 
 export const userUpdateSchema = userSchema.partial(); // Make ALL fields optional for updates

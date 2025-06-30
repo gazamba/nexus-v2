@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -11,7 +11,6 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,52 +21,65 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import type { User, UserWithPassword } from "../types/user-types";
-import { userSchema, userUpdateSchema } from "../schemas/user-schema";
+import type { UserWithPasswordType } from "../types/user-types";
+import { UserFormData, userSchema } from "../schemas/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 
 interface UserFormProps {
-  user?: User;
+  user?: UserWithPasswordType | null;
   loading?: boolean;
-  onSubmit?: (data: UserWithPassword) => void;
+  onSubmit: (data: UserFormData) => void;
   error?: string | null;
+  onReset?: () => void;
+  onCancel?: () => void;
 }
 
-export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
-  const form = useForm<UserWithPassword>({
-    resolver: zodResolver(user ? userUpdateSchema : userSchema),
-    defaultValues: user ?? {
-      full_name: "",
-      email: "",
-      password: "",
-      role: undefined,
-      admin: false,
-      billing: false,
-      bill_rate: null,
-      cost_rate: null,
-      avatar_initial: "",
-      notes: "",
-    },
+export function UserForm({
+  user,
+  loading,
+  error,
+  onSubmit,
+  onCancel,
+}: UserFormProps) {
+  const form = useForm<UserFormData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: user
+      ? {
+          full_name: user.full_name ?? "",
+          password: "",
+          email: user.email ?? "",
+          phone: user.phone ?? "",
+          role: user.role ?? "",
+          admin: user.admin ?? false,
+          billing: user.billing ?? false,
+          bill_rate: user.bill_rate ?? null,
+          cost_rate: user.cost_rate ?? null,
+          avatar_initial: user.avatar_initial ?? "",
+          notes: user.notes ?? "",
+        }
+      : {
+          full_name: "",
+          password: "",
+          email: "",
+          phone: "",
+          role: "",
+          admin: false,
+          billing: false,
+          bill_rate: null,
+          cost_rate: null,
+          avatar_initial: "",
+          notes: "",
+        },
   });
 
   const { control, handleSubmit, reset } = form;
 
-  useEffect(() => {
-    reset(user || {});
-  }, [user, reset]);
-
-  const handleFormSubmit = (data: UserWithPassword) => {
-    console.log(data);
-    onSubmit?.(data);
-    // TODO: Implement actual user update logic here
-  };
-
   return (
     <Form {...form}>
       <form
-        onSubmit={handleSubmit(handleFormSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         className="space-y-6"
-        autoComplete="off"
         id="user-form"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -79,6 +91,19 @@ export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
                   <Input type="text" {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} value={field.value ?? ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -134,6 +159,28 @@ export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
                     </SelectContent>
                   </Select>
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="avatar_initial"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Avatar Initial</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    maxLength={2}
+                    {...field}
+                    value={field.value ?? ""}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Optional. 1-2 letters for avatar fallback.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -224,28 +271,6 @@ export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
           />
 
           <FormField
-            name="avatar_initial"
-            control={control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Avatar Initial</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    maxLength={2}
-                    {...field}
-                    value={field.value ?? ""}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Optional. 1-2 letters for avatar fallback.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
             name="notes"
             control={control}
             render={({ field }) => (
@@ -260,7 +285,7 @@ export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
           />
         </div>
         {error && <div className="text-red-600 font-medium">{error}</div>}
-        {/* <div className="flex gap-2 justify-end mt-4">
+        <div className="flex gap-2 justify-end mt-4">
           <Button
             type="button"
             variant="secondary"
@@ -272,7 +297,7 @@ export function UserForm({ user, loading, error, onSubmit }: UserFormProps) {
           <Button type="submit" disabled={loading} className="">
             {loading ? "Saving..." : user ? "Update User" : "Create User"}
           </Button>
-        </div> */}
+        </div>
       </form>
     </Form>
   );

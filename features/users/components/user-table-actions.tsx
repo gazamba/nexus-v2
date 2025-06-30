@@ -4,43 +4,54 @@ import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import {
-  User,
-  UserSEWithAssignedClients,
-  UserUpdate,
+  UserSEWithAssignedClientsType,
+  UserWithPasswordType,
 } from "../types/user-types";
-import Modal from "@/components/ui/modal";
 import { UserForm } from "./user-form";
+import { useState } from "react";
+import { UserFormData } from "../schemas/user-schema";
+import ModalConfirmation from "@/components/ui/modal-confirmation";
+import Modal from "@/components/ui/modal";
 
 interface UserTableRowProps {
-  user: User | UserSEWithAssignedClients;
+  user: UserWithPasswordType | UserSEWithAssignedClientsType;
 }
 
 export default function UserTableActions({ user }: UserTableRowProps) {
-  const handleEditSubmit = async (data: UserUpdate) => {
-    console.log("Updating user:", user.id, data);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const handleEditSubmit = async (data: UserFormData) => {
+    console.log("Updating user:", data);
     // TODO: Implement actual user update logic here
+    setEditModalOpen(false);
   };
 
-  const handleDelete = (userId: string) => {
+  const handleDelete = async (userId: string) => {
     console.log("deleting", userId);
     // TODO: Implement actual user delete logic here
+    setDeleteModalOpen(false);
   };
 
   return (
     <>
       <Modal
         title="Edit User"
-        onSubmit={() => handleEditSubmit(user)}
-        buttonTextAction="Update User"
         trigger={
           <Button variant="ghost" size="icon">
             <Edit className="w-4 h-4" />
           </Button>
         }
+        open={editModalOpen}
+        setOpen={setEditModalOpen}
       >
-        <UserForm user={user} />
+        <UserForm
+          user={user}
+          onSubmit={handleEditSubmit}
+          onCancel={() => setEditModalOpen(false)}
+        />
       </Modal>
-      <Modal
+      <ModalConfirmation
         title="Confirm Delete"
         trigger={
           <Button
@@ -51,11 +62,12 @@ export default function UserTableActions({ user }: UserTableRowProps) {
             <Trash2 className="w-4 h-4" />
           </Button>
         }
-        onSubmit={() => handleDelete(user.id)}
-        buttonTextAction="Delete"
+        open={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        onAction={() => handleDelete(user.id!)}
       >
         <p>Are you sure you want to delete this user?</p>
-      </Modal>
+      </ModalConfirmation>
     </>
   );
 }

@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/table";
 import { UserTableRow } from "./user-table-row";
 import type {
-  User,
-  UserSEWithAssignedClients,
+  UserType,
+  UserSEWithAssignedClientsType,
 } from "@/features/users/types/user-types";
 
 interface UsersTableProps {
-  users: User[] | UserSEWithAssignedClients[];
+  users: UserType[] | UserSEWithAssignedClientsType[];
   activeTab: "admin" | "se";
 }
 
@@ -69,7 +69,7 @@ export function UsersTable({ users, activeTab }: UsersTableProps) {
         </TableHeader>
         <TableBody className="bg-white divide-y divide-gray-200">
           {users.map(
-            (user: User | UserSEWithAssignedClients, index: number) => (
+            (user: UserType | UserSEWithAssignedClientsType, index: number) => (
               <UserTableRow key={index} user={user} />
             )
           )}

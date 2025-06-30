@@ -1,14 +1,14 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ItemBadge } from "@/components/ui/item-badge";
 import {
-  User,
-  UserSEWithAssignedClients,
+  UserType,
+  UserSEWithAssignedClientsType,
 } from "@/features/users/types/user-types";
 import { TableRow, TableCell } from "@/components/ui/table";
 import UserTableActions from "@/features/users/components/user-table-actions";
 
 interface UserTableRowProps {
-  user: User | UserSEWithAssignedClients;
+  user: UserType | UserSEWithAssignedClientsType;
 }
 
 export function UserTableRow({ user }: UserTableRowProps) {

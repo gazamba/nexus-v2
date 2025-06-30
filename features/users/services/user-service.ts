@@ -2,13 +2,13 @@
 
 import { createClient } from "@/utils/supabase/server";
 import {
-  User,
-  UserSEWithAssignedClients,
-  UserWithPassword,
-  UserWithAssignments,
+  UserType,
+  UserSEWithAssignedClientsType,
+  UserWithPasswordType,
+  UserWithAssignmentsType,
 } from "@/features/users/types/user-types";
 
-export async function createCompleteUser(params: UserWithPassword) {
+export async function createCompleteUser(params: UserWithPasswordType) {
   const supabase = await createClient();
 
   const { data: authData, error: signUpError } = await supabase.auth.signUp({
@@ -61,7 +61,7 @@ export async function createCompleteUser(params: UserWithPassword) {
   }
 }
 
-export async function updateUser(userId: string, params: UserWithPassword) {
+export async function updateUser(userId: string, params: UserWithPasswordType) {
   const supabase = await createClient();
 
   if (!userId) {
@@ -115,7 +115,7 @@ export async function updateUser(userId: string, params: UserWithPassword) {
   return updatedUserData;
 }
 
-export async function getUsersByRole(role: string): Promise<User[]> {
+export async function getUsersByRole(role: string): Promise<UserType[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -130,7 +130,7 @@ export async function getUsersByRole(role: string): Promise<User[]> {
   return data || [];
 }
 
-export async function getUserByUserID(userId: string): Promise<User> {
+export async function getUserByUserID(userId: string): Promise<UserType> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -149,7 +149,7 @@ export async function getUserByUserID(userId: string): Promise<User> {
 }
 
 export async function getUsersSEWithAssignedClients(): Promise<
-  UserSEWithAssignedClients[]
+  UserSEWithAssignedClientsType[]
 > {
   const supabase = await createClient();
 
@@ -174,7 +174,7 @@ export async function getUsersSEWithAssignedClients(): Promise<
   }
 
   let usersWithClients = seUsers.map(
-    (user: UserWithAssignments): UserSEWithAssignedClients => {
+    (user: UserWithAssignmentsType): UserSEWithAssignedClientsType => {
       const { solutions_engineer_assignment, ...rest } = user;
       return {
         ...rest,

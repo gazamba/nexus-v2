@@ -4,14 +4,14 @@ import { TitleContent } from "@/components/ui/title-content";
 import { UsersTable } from "./users-table";
 
 import type {
-  User,
-  UserSEWithAssignedClients,
+  UserType,
+  UserSEWithAssignedClientsType,
 } from "@/features/users/types/user-types";
 import AddNewUser from "./add-new-user";
 
 interface UserManagementProps {
-  initialUsers: User[];
-  initialSeUsers: UserSEWithAssignedClients[];
+  initialUsers: UserType[];
+  initialSeUsers: UserSEWithAssignedClientsType[];
   activeTab: "admin" | "se";
 }
 
