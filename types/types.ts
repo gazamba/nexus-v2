@@ -1,4 +1,4 @@
-export type ActionResult<T = any> = {
+export type ActionResultType<T = any> = {
   success: boolean;
   message?: string;
   data?: T;
