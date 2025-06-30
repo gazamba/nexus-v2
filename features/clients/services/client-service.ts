@@ -1,5 +1,38 @@
 import { createClient } from "@/utils/supabase/server";
-import { Client } from "@/features/clients/types/client-types";
+import { ClientType } from "@/features/clients/types/client-types";
+import { ClientFormData } from "@/features/clients/types/client-types";
+
+export async function getClients(): Promise<ClientType[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.from("client").select("*");
+
+  if (error) {
+    console.error("Error fetching clients:", error);
+    throw new Error("Error fetching clients");
+  }
+
+  return data;
+}
+
+export async function getClientByClientId(
+  clientId: string
+): Promise<ClientType> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("client")
+    .select("*")
+    .eq("id", clientId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching client:", error);
+    throw new Error("Error fetching client");
+  }
+
+  return data;
+}
 
 export async function getClientIdByUserId(userId: string) {
   const supabase = await createClient();
@@ -40,7 +73,7 @@ export async function getClientName(clientId: string) {
 
 export async function getClientsBySolutionsEngineerId(
   solutionsEngineerId: string
-): Promise<Client[]> {
+): Promise<ClientType[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -62,4 +95,59 @@ export async function getClientsBySolutionsEngineerId(
   }
 
   return clients || [];
+}
+
+export async function createClientRecord(
+  clientFormData: ClientFormData
+): Promise<ClientType> {
+  const supabase = await createClient();
+
+  const { data: clientData, error } = await supabase
+    .from("client")
+    .insert({
+      name: clientFormData.name,
+      departments: clientFormData.departments,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Error creating client with error: ${error}`);
+  }
+
+  return clientData;
+}
+
+export async function updateClientRecord(
+  clientId: string,
+  clientFormData: ClientFormData
+): Promise<ClientType> {
+  const supabase = await createClient();
+
+  const { data, error: errorFetchClient } = await supabase
+    .from("client")
+    .select("*")
+    .eq("id", clientId)
+    .single();
+
+  if (errorFetchClient) {
+    console.error("Error fetching client:", errorFetchClient);
+    throw new Error("Error fetching client");
+  }
+
+  const { data: clientData, error } = await supabase
+    .from("client")
+    .update({
+      name: clientFormData.name,
+      departments: clientFormData.departments,
+      //TODO: implement remainings fields for update
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Error updating client with error: ${error}`);
+  }
+
+  return clientData;
 }
