@@ -3,13 +3,13 @@
 import type React from "react";
 import { createClient } from "@/utils/supabase/client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { User } from "@/features/users/types/user-types";
+import { UserType } from "@/features/users/types/user-types";
 import { getClientName } from "@/features/clients/services/client-service";
 import { getClientIdByUserId } from "@/features/clients/services/client-service";
 
 interface AuthContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: UserType | null;
+  setUser: (user: UserType | null) => void;
   isAdmin: boolean;
   isClient: boolean;
   isSE: boolean;
@@ -20,12 +20,12 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [clientName, setClientName] = useState<string | null>(null);
   const supabase = createClient();
 
-  const fetchUser = async (userId: string): Promise<User | null> => {
+  const fetchUser = async (userId: string): Promise<UserType | null> => {
     const { data, error } = await supabase
       .from("user")
       .select("*")
