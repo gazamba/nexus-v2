@@ -68,7 +68,6 @@ export type Database = {
           id: string
           name: string
           plan_id: string | null
-          status: string | null
           url: string | null
         }
         Insert: {
@@ -78,7 +77,6 @@ export type Database = {
           id?: string
           name: string
           plan_id?: string | null
-          status?: string | null
           url?: string | null
         }
         Update: {
@@ -88,7 +86,6 @@ export type Database = {
           id?: string
           name?: string
           plan_id?: string | null
-          status?: string | null
           url?: string | null
         }
         Relationships: [
@@ -584,6 +581,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "solutions_engineer_assignment_se_user_id_fkey1"
+            columns: ["se_user_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "solutions_engineer_assignments_client_id_fkey"
             columns: ["client_id"]
