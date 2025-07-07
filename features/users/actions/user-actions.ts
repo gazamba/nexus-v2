@@ -23,7 +23,6 @@ export async function createUserAction(
       return {
         success: false,
         message: "Validation failed. Please check the form and try again.",
-        errors: validation.error.flatten().fieldErrors,
       };
     }
 
@@ -41,7 +40,6 @@ export async function createUserAction(
     return {
       success: false,
       message: "Failed to create user",
-      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -64,7 +62,6 @@ export async function updateUserAction(
       return {
         success: false,
         message: "Validation failed. Please check the form and try again.",
-        errors: validation.error.flatten().fieldErrors,
       };
     }
 
@@ -83,7 +80,6 @@ export async function updateUserAction(
     return {
       success: false,
       message: "Failed to update user",
-      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -105,7 +101,6 @@ export async function deleteUserAction(
     return {
       success: false,
       message: "Failed to delete user",
-      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
