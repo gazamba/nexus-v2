@@ -1,3 +1,5 @@
+"use server";
+
 import { ActionResultType } from "@/types/types";
 import { ClientFormData } from "@/features/clients/types/client-types";
 import { clientSchema } from "../schemas/client-schema";
@@ -7,64 +9,66 @@ import {
 } from "../services/client-service";
 
 export async function createClientAction(
-  clientData: ClientFormData
+  clientFormData: ClientFormData
 ): Promise<ActionResultType> {
   try {
-    const validation = clientSchema.safeParse(clientData);
+    const validation = clientSchema.safeParse(clientFormData);
 
     if (!validation.success) {
       return {
         success: false,
         message: "Validation failed. Please check the form and try again.",
-        errors: validation.error.flatten().fieldErrors,
       };
     }
-    const result = await createClientRecord(validation.data);
+
+    console.log(`clientData: ${JSON.stringify(clientFormData)}`);
+    console.log(`validationData: ${JSON.stringify(validation.data)}`);
+    await createClientRecord(validation.data);
 
     return {
       success: true,
       message: "Client created successfully!",
-      data: result,
     };
   } catch (error) {
     console.error("Error creating client:", error);
 
     return {
       success: false,
-      message: "Failed to create client",
-      errors: error instanceof Error ? error.message : "Unknown error",
+      message: "Failed to create client!",
     };
   }
 }
 
 export async function updateClientAction(
   clientId: string,
-  clientData: ClientFormData
+  clientFormData: ClientFormData
 ): Promise<ActionResultType> {
   try {
-    const validation = clientSchema.safeParse(clientData);
+    const validation = clientSchema.safeParse(clientFormData);
 
     if (!validation.success) {
       return {
         success: false,
         message: "Validation failed. Please check the form and try again.",
-        errors: validation.error.flatten().fieldErrors,
       };
     }
+
+    console.log(`clientId: ${clientId}`);
+    console.log(`clientData: ${JSON.stringify(clientFormData)}`);
+
     const result = await updateClientRecord(clientId, validation.data);
 
     return {
       success: true,
-      message: "Client created successfully!",
+      message: "Client updated successfully!",
       data: result,
     };
   } catch (error) {
-    console.error("Error creating client:", error);
+    console.error("Error updating client:", error);
 
     return {
       success: false,
-      message: "Failed to create client",
-      errors: error instanceof Error ? error.message : "Unknown error",
+      message: "Failed to update client!",
     };
   }
 }

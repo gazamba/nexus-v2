@@ -10,7 +10,7 @@ interface ClientTableRowProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   loading?: boolean;
-  onSubmit: (data: ClientFormData, clientId?: string) => void;
+  onEdit: (clientId: string, data: ClientFormData) => void;
   onCancel?: () => void;
 }
 
@@ -18,7 +18,7 @@ export function ClientTableRow({
   client,
   open,
   setOpen,
-  onSubmit,
+  onEdit,
   onCancel,
   loading,
 }: ClientTableRowProps) {
@@ -39,7 +39,7 @@ export function ClientTableRow({
           }
         >
           <ClientForm
-            onSubmit={onSubmit}
+            onEdit={onEdit}
             onCancel={onCancel}
             loading={loading}
             client={client}
@@ -50,7 +50,6 @@ export function ClientTableRow({
       <TableCell className="text-gray-600">
         {client.departments?.join(", ")}
       </TableCell>
-      <TableCell className="text-gray-600">{client.status}</TableCell>
       <TableCell className="text-gray-600">
         <Link
           className="hover:underline hover:text-blue-500 flex items-center text-blue-500"

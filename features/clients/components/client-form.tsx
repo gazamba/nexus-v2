@@ -17,26 +17,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 interface ClientFormProps {
   client?: ClientType | null;
   loading?: boolean;
-  onSubmit: (data: ClientFormData, clientId?: string) => void;
+  onCreate?: (data: ClientFormData) => void;
+  onEdit?: (clientId: string, data: ClientFormData) => void;
   onCancel?: () => void;
 }
 
 export default function ClientForm({
   client,
   loading,
-  onSubmit,
+  onCreate,
+  onEdit,
   onCancel,
 }: ClientFormProps) {
   const form = useForm({
@@ -46,7 +41,6 @@ export default function ClientForm({
           name: client.name ?? "",
           active: client.active ?? true,
           departments: client.departments ?? [],
-          status: client.status ?? "",
           url: client.url ?? "",
           plan_id: client.plan_id ?? "",
         }
@@ -54,7 +48,6 @@ export default function ClientForm({
           name: "",
           active: true,
           departments: [],
-          status: "",
           url: "",
           plan_id: "",
         },
@@ -63,7 +56,11 @@ export default function ClientForm({
   const { handleSubmit, control } = form;
 
   const handleFormSubmit = (data: ClientFormData) => {
-    onSubmit(data, client?.id);
+    if (client?.id && onEdit) {
+      onEdit(client.id, data);
+    } else if (onCreate) {
+      onCreate(data);
+    }
   };
 
   return (
@@ -128,6 +125,10 @@ export default function ClientForm({
                     }
                     onChange={(e) => {
                       const value = e.target.value;
+                      field.onChange(value);
+                    }}
+                    onBlur={(e) => {
+                      const value = e.target.value;
                       const departments = value
                         ? value
                             .split(",")
@@ -141,30 +142,6 @@ export default function ClientForm({
                 <FormDescription>
                   Enter departments separated by commas (e.g. HR, Finance, IT)
                 </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="status"
-            control={control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value ?? undefined}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

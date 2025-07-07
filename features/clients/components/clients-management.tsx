@@ -11,6 +11,7 @@ import {
   createClientAction,
   updateClientAction,
 } from "../actions/client-actions";
+import { useRouter } from "next/navigation";
 
 export default function ClientsManagement({
   clients,
@@ -19,53 +20,61 @@ export default function ClientsManagement({
 }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingClientId, setEditingClientId] = useState<string | null>(null);
   const [editLoading, setEditLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleAddClient = async (clientData: ClientFormData) => {
     setAddLoading(true);
-    // const {success, message, errors} = await createClientAction(clientData)
-
-    setTimeout(() => {
-      console.log("Adding client:", clientData);
-      setAddLoading(false);
-      setAddModalOpen(false);
+    const { success, message } = await createClientAction(clientData);
+    if (!success) {
       toast({
-        title: "Success",
-        description: "Client added successfully!",
+        title: "Error",
+        description: message,
+        variant: "destructive",
       });
-    }, 2000);
+      setAddLoading(false);
+      return;
+    }
+
+    console.log("Adding client:", clientData);
+    toast({
+      title: "Success",
+      description: message,
+    });
+    setAddModalOpen(false);
+    setAddLoading(false);
+    router.refresh();
   };
 
   const handleEditClient = async (
-    clientData: ClientFormData,
-    clientId?: string
+    clientId: string,
+    clientData: ClientFormData
   ) => {
     setEditLoading(true);
-    if (clientId) {
-      await updateClientAction(clientId, clientData);
-    }
-    // TODO: Add logic to edit a client
-    setTimeout(() => {
-      console.log("Editing client:", clientData);
-      setEditLoading(false);
-      setEditModalOpen(false);
-      toast({
-        title: "Success",
-        description: "Client updated successfully!",
-      });
-    }, 1000);
-  };
 
-  if (error) {
+    const { success, message } = await updateClientAction(clientId, clientData);
+
+    if (!success) {
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+      setEditLoading(false);
+      return;
+    }
+
+    console.log("Editing client:", clientData);
+    setEditLoading(false);
+    setEditingClientId(null);
     toast({
-      title: "Error",
-      description: error,
-      variant: "destructive",
+      title: "Success",
+      description: "Client updated successfully!",
     });
-  }
+    router.refresh();
+  };
 
   return (
     <>
@@ -77,7 +86,7 @@ export default function ClientsManagement({
           setOpen={setAddModalOpen}
         >
           <ClientForm
-            onSubmit={handleAddClient}
+            onCreate={handleAddClient}
             loading={addLoading}
             onCancel={() => setAddModalOpen(false)}
           />
@@ -86,11 +95,11 @@ export default function ClientsManagement({
 
       <ClientsTable
         clients={clients}
-        open={editModalOpen}
-        setOpen={setEditModalOpen}
+        editingClientId={editingClientId}
+        setEditingClientId={setEditingClientId}
         loading={editLoading}
-        onSubmit={handleEditClient}
-        onCancel={() => setEditModalOpen(false)}
+        onEdit={handleEditClient}
+        onCancel={() => setEditingClientId(null)}
       />
     </>
   );

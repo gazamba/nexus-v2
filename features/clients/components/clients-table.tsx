@@ -12,10 +12,10 @@ import { ClientFormData } from "../types/client-types";
 interface DashboardAdminTableProps {
   clients: ClientType[];
   loading?: boolean;
-  onSubmit: (data: ClientFormData, clientId?: string) => void;
+  onEdit: (clientId: string, data: ClientFormData) => void;
   onCancel?: () => void;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  editingClientId: string | null;
+  setEditingClientId: (clientId: string | null) => void;
 }
 
 const tableHeaders = [
@@ -32,10 +32,6 @@ const tableHeaders = [
     key: "departments",
   },
   {
-    label: "Status",
-    key: "status",
-  },
-  {
     label: "URL",
     key: "url",
   },
@@ -47,9 +43,9 @@ const tableHeaders = [
 
 export function ClientsTable({
   clients,
-  open,
-  setOpen,
-  onSubmit,
+  editingClientId,
+  setEditingClientId,
+  onEdit,
   onCancel,
 }: DashboardAdminTableProps) {
   return (
@@ -67,9 +63,9 @@ export function ClientsTable({
             <ClientTableRow
               key={index}
               client={client}
-              open={open}
-              setOpen={setOpen}
-              onSubmit={onSubmit}
+              open={editingClientId === client.id}
+              setOpen={(open) => setEditingClientId(open ? client.id : null)}
+              onEdit={onEdit}
               onCancel={onCancel}
             />
           ))}

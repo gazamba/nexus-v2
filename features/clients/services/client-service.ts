@@ -97,9 +97,7 @@ export async function getClientsBySolutionsEngineerId(
   return clients || [];
 }
 
-export async function createClientRecord(
-  clientFormData: ClientFormData
-): Promise<ClientType> {
+export async function createClientRecord(clientFormData: ClientFormData) {
   const supabase = await createClient();
 
   const { data: clientData, error } = await supabase
@@ -115,6 +113,8 @@ export async function createClientRecord(
     throw new Error(`Error creating client with error: ${error}`);
   }
 
+  console.log(`clienData db: ${clientData}`);
+
   return clientData;
 }
 
@@ -123,6 +123,13 @@ export async function updateClientRecord(
   clientFormData: ClientFormData
 ): Promise<ClientType> {
   const supabase = await createClient();
+
+  if (!clientId) {
+    throw new Error("ClientId is required to update an existent client!");
+  }
+
+  console.log(`clientId: ${clientId}`);
+  console.log(`clientData: ${JSON.stringify(clientFormData)}`);
 
   const { data, error: errorFetchClient } = await supabase
     .from("client")
@@ -140,8 +147,10 @@ export async function updateClientRecord(
     .update({
       name: clientFormData.name,
       departments: clientFormData.departments,
-      //TODO: implement remainings fields for update
+      active: clientFormData.active,
+      url: clientFormData.url,
     })
+    .eq("id", data.id)
     .select()
     .single();
 
