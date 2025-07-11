@@ -23,7 +23,6 @@ export async function loginAction(
       return {
         success: false,
         message: "Login failed",
-        errors: error.message,
       };
     }
 
@@ -35,7 +34,6 @@ export async function loginAction(
     return {
       success: false,
       message: "An unexpected error occurred",
-      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -68,7 +66,6 @@ export async function signUpAndCreateUserAction(
       return {
         success: false,
         message: "Validation failed",
-        errors: validation.error.flatten().fieldErrors,
       };
     }
 
@@ -84,7 +81,6 @@ export async function signUpAndCreateUserAction(
     return {
       success: false,
       message: "Failed to create account",
-      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -98,7 +94,6 @@ export async function signOutAction(): Promise<ActionResultType> {
       return {
         success: false,
         message: "Failed to sign out",
-        errors: error.message,
       };
     }
 
@@ -110,7 +105,6 @@ export async function signOutAction(): Promise<ActionResultType> {
     return {
       success: false,
       message: "An unexpected error occurred",
-      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
