@@ -22,8 +22,7 @@ export default function UserManagement({
 }: UserManagementProps) {
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <TitleContent title="Manage Users" />
+      <div className="flex justify-end items-center">
         <AddNewUser />
       </div>
       <Card>
