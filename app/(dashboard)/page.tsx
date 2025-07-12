@@ -1,4 +1,4 @@
-import DashboardAdminManagement from "@/features/dashboard-admin/components/dashboard-admin-management";
+import DashboardAdminManagement from "@/features/dashboard/components/admin/dashboard-admin-management";
 
 // Sample data
 const sampleMetrics = {
